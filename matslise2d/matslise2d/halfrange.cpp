@@ -178,4 +178,12 @@ vector<Eigenfunction2D<Scalar, withDerivatives>> Matslise2DHalf<Scalar>::eigenfu
 }
 
 
+#define INSTANTIATE_EIGENFUNCTION(Scalar, withDerivative) \
+template vector<Eigenfunction2D<Scalar, (withDerivative)>> \
+Matslise2DHalf<Scalar>::eigenfunction<withDerivative>(const Scalar &E) const;
+
+#define INSTANTIATE_MORE(Scalar) \
+INSTANTIATE_EIGENFUNCTION(Scalar, true) \
+INSTANTIATE_EIGENFUNCTION(Scalar, false)
+
 #include "instantiate.h"
