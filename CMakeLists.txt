@@ -12,7 +12,7 @@ set(BUILD_SHARED_LIBS ON)
 if (MSVC)
     add_compile_options(/W4 /WX)
 else ()
-    add_compile_options(-Wall -Wextra -Werror -Wno-undefined-var-template)
+    add_compile_options(-Wall -Wextra -Wno-undefined-var-template)
 endif ()
 
 set(MATSLISE2D_SRC
