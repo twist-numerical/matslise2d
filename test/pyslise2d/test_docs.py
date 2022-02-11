@@ -1,8 +1,8 @@
-import pyslise
+import pyslise2d
 import sys
 import doctest
 
-failures, test_count = doctest.testmod(pyslise, verbose=True)
+failures, test_count = doctest.testmod(pyslise2d, verbose=True)
 
 assert test_count > 0, "No tests were found"
 

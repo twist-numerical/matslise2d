@@ -3,8 +3,8 @@ name: Build and test
 on: [ push ]
 
 jobs:
-  matslise_test:
-    name: Test matslise
+  matslise2d_test:
+    name: Test matslise2d
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -41,22 +41,22 @@ jobs:
           cmake -G "MinGW Makefiles" `
             -DCMAKE_BUILD_TYPE=Release `
             -DEigen3_DIR="$(resolve-path ../../eigen/build)" ..
-          cmake --build . --target matslise_test --config Release
+          cmake --build . --target matslise2d_test --config Release
         working-directory: ./build
       - if: ${{!startsWith(matrix.os, 'windows')}}
         name: CMake (not Windows)
         run: |
           cmake .. -DCMAKE_BUILD_TYPE=Release \
             -DEigen3_DIR="$(pwd)/../../eigen/build"
-          cmake --build . --target matslise_test --config Release -- -j 3
+          cmake --build . --target matslise2d_test --config Release -- -j 3
         working-directory: ./build
       - name: Run tests
         run: |
-          ./matslise_test
+          ./matslise2d_test
         working-directory: ./build/test
 
-  matslise_test_float128:
-    name: Test matslise (float128)
+  matslise2d_test_float128:
+    name: Test matslise2d (float128)
     runs-on: ubuntu-18.04
     steps:
       - name: Cache Eigen3
