@@ -79,6 +79,8 @@ jobs:
       - name: Install boost
         run: sudo apt-get install libboost-all-dev
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - run: mkdir build
       - name: CMake
         run: |
