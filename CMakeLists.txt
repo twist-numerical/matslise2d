@@ -36,8 +36,6 @@ add_library(matslise2d ${MATSLISE2D_SRC})
 
 SET(MATSLISE_STATIC ON)
 SET(MATSLISE_MATSCS ON)
-SET(MATSLISE_2D OFF)
-SET(MATSLISE_3D OFF)
 SET(MATSLISE_PYTHON OFF)
 
 OPTION(MATSLISE2D_LONG_DOUBLE "Compile with support for long double" OFF)
@@ -76,6 +74,27 @@ if (MATSLISE2D_PYTHON)
     endif ()
 
     if (pybind11_FOUND)
+        message("-- python: ${PYTHON_EXECUTABLE}")
+        pybind11_add_module(pyslise2d MODULE ${MATSLISE2D_SRC} ${PYSLISE2D_SRC})
+        target_link_libraries(pyslise2d PRIVATE ${libraries})
+        IF (PARALLEL)
+            target_link_libraries(pyslise2d PUBLIC OpenMP::OpenMP_CXX)
+        ENDIF (PARALLEL)
+
+        configure_file(matslise2d/pyslise2d/setup.py setup.py NEWLINE_STYLE LF)
+        configure_file(matslise2d/pyslise2d/description.md description.md NEWLINE_STYLE LF)
+        add_custom_target(build_wheel
+                COMMAND ${CMAKE_COMMAND} -E env PYSLISE_LIBRARY="$<TARGET_FILE:pyslise2d>"
+                ${PYTHON_EXECUTABLE} setup.py bdist_wheel
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+        add_dependencies(build_wheel pyslise2d)
+
+        add_custom_target(pyslise2d_install
+                # COMMAND ${PYTHON_EXECUTABLE} -m pip uninstall -y --verbose pyslise2d
+                COMMAND ${CMAKE_COMMAND} -E env PYSLISE2D_LIBRARY="$<TARGET_FILE:pyslise2d>"
+                ${PYTHON_EXECUTABLE} -m pip install --upgrade --ignore-installed .
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+        add_dependencies(pyslise2d_install pyslise2d)
 
     else ()
         message("To enable python bindings, make sure pybind11 is available in /lib/pybind11. Or disable the python bindings with -DSCHRODINGER_PYTHON=OFF")

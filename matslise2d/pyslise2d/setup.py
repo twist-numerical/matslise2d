@@ -3,8 +3,8 @@ from setuptools.command.build_ext import build_ext
 import os
 import shutil
 
-assert 'PYSLISE_LIBRARY' in os.environ, "pyslise_library environment variable has to be set"
-library = os.environ['PYSLISE_LIBRARY']
+assert 'PYSLISE2D_LIBRARY' in os.environ, "pyslise2d_library environment variable has to be set"
+library = os.environ['PYSLISE2D_LIBRARY']
 print("Using: '%s'" % library)
 
 with open('description.md', 'rb') as f:
@@ -30,15 +30,15 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name="pyslise",
-    version="${PYSLISE_VERSION}",
+    name="pyslise2d",
+    version="${PYSLISE2D_VERSION}",
     author="Toon Baeyens",
     author_email="toon.baeyens@ugent.be",
-    description="Python bindings for the C++ version of Matslise",
+    description="Python bindings for the C++ version of 2D Matslise",
     long_description=long_description,
     long_description_content_type='text/markdown',
     url="https://matslise.ugent.be/",
-    ext_modules=[CMakeExtension('pyslise')],
+    ext_modules=[CMakeExtension('pyslise2d')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
     install_requires=['numpy']

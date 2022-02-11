@@ -1,8 +1,6 @@
 #ifndef MATSLISE_PYSLISE
 #define MATSLISE_PYSLISE
 
-#include "../matslise.h"
-#include "../matscs.h"
 #include "../matslise2d.h"
 #include "../matslise3d.h"
 
