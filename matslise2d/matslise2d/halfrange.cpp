@@ -123,7 +123,7 @@ vector<tuple<Index, Scalar, Index>> Matslise2DHalf<Scalar>::eigenvaluesByIndex(I
 
 template<typename Scalar>
 template<bool withDerivatives>
-vector<Eigenfunction2D<Scalar, withDerivatives>> Matslise2DHalf<Scalar>::eigenfunction(const Scalar &E) const {
+vector<Eigenfunction2D<Scalar, withDerivatives>> Matslise2DHalf<Scalar>::eigenfunctionHelper(const Scalar &E) const {
     vector<Eigenfunction2D<Scalar, withDerivatives>> eigenfunctions;
     for (bool even : {false, true}) {
         const Y<Scalar, Dynamic> &boundary = even ? neumannBoundary : dirichletBoundary;
@@ -180,7 +180,7 @@ vector<Eigenfunction2D<Scalar, withDerivatives>> Matslise2DHalf<Scalar>::eigenfu
 
 #define INSTANTIATE_EIGENFUNCTION(Scalar, withDerivative) \
 template vector<Eigenfunction2D<Scalar, (withDerivative)>> \
-Matslise2DHalf<Scalar>::eigenfunction<withDerivative>(const Scalar &E) const;
+Matslise2DHalf<Scalar>::eigenfunctionHelper<withDerivative>(const Scalar &E) const;
 
 #define INSTANTIATE_MORE(Scalar) \
 INSTANTIATE_EIGENFUNCTION(Scalar, true) \

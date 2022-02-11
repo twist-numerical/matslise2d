@@ -85,7 +85,7 @@ namespace matslise {
         std::vector<std::shared_ptr<typename Matslise<Scalar>::Eigenfunction>> eigenfunctions;
         Direction direction = none;
 
-        Matslise2DSector(const Matslise2D<Scalar> *_se2d) : se2d(_se2d) {};
+        explicit Matslise2DSector(const Matslise2D<Scalar> *_se2d) : se2d(_se2d) {};
 
         Matslise2DSector(const Matslise2D<Scalar> *se2d, const Scalar &min, const Scalar &max, Direction);
 
@@ -107,10 +107,10 @@ namespace matslise {
         refine(const Matslise2D<Scalar> *problem, const Scalar &min, const Scalar &max, Direction) const;
     };
 
-    template<typename _Scalar=double>
-    class Matslise2D : public AbstractMatslise2D<_Scalar>, private MatsliseND<_Scalar, Matslise2DSector<_Scalar>> {
+    template<typename Scalar_=double>
+    class Matslise2D : public AbstractMatslise2D<Scalar_>, private MatsliseND<Scalar_, Matslise2DSector<Scalar_>> {
     public:
-        typedef _Scalar Scalar;
+        typedef Scalar_ Scalar;
         using typename AbstractMatslise2D<Scalar>::VectorXs;
         using typename AbstractMatslise2D<Scalar>::MatrixXs;
         using typename AbstractMatslise2D<Scalar>::ArrayXs;
@@ -195,15 +195,15 @@ namespace matslise {
         eigenfunction(const Y<Scalar, Eigen::Dynamic> &left, const Scalar &E) const;
     };
 
-    template<typename _Scalar=double>
-    class Matslise2DHalf : public AbstractMatslise2D<_Scalar> {
+    template<typename Scalar_=double>
+    class Matslise2DHalf : public AbstractMatslise2D<Scalar_> {
     public:
-        typedef _Scalar Scalar;
-        using typename AbstractMatslise2D<_Scalar>::VectorXs;
-        using typename AbstractMatslise2D<_Scalar>::MatrixXs;
-        using typename AbstractMatslise2D<_Scalar>::ArrayXs;
-        using typename AbstractMatslise2D<_Scalar>::ArrayXXs;
-        typedef typename Matslise2D<_Scalar>::Config Config;
+        typedef Scalar_ Scalar;
+        using typename AbstractMatslise2D<Scalar>::VectorXs;
+        using typename AbstractMatslise2D<Scalar>::MatrixXs;
+        using typename AbstractMatslise2D<Scalar>::ArrayXs;
+        using typename AbstractMatslise2D<Scalar>::ArrayXXs;
+        typedef typename Matslise2D<Scalar>::Config Config;
     public:
         Y<Scalar, Eigen::Dynamic, Eigen::Dynamic> neumannBoundary;
         Y<Scalar, Eigen::Dynamic, Eigen::Dynamic> dirichletBoundary;
@@ -234,18 +234,19 @@ namespace matslise {
         eigenvaluesByIndex(Eigen::Index Imin, Eigen::Index Imax) const override;
 
         std::vector<Eigenfunction2D<Scalar>> eigenfunction(const Scalar &E) const override {
-            return eigenfunction < false > (E);
+            return eigenfunctionHelper<false>(E);
         }
 
         std::vector<Eigenfunction2D<Scalar, true>>
         eigenfunctionWithDerivatives(const Scalar &E) const override {
-            return eigenfunction < true > (E);
+            return eigenfunctionHelper<true>(E);
         }
 
         Eigen::Index estimateIndex(const Scalar &) const override;
 
+    private:
         template<bool withDerivatives>
-        std::vector<Eigenfunction2D<Scalar, withDerivatives>> eigenfunction(const Scalar &E) const;
+        std::vector<Eigenfunction2D<Scalar, withDerivatives>> eigenfunctionHelper(const Scalar &E) const;
     };
 }
 
