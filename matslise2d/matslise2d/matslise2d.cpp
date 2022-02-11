@@ -3,9 +3,7 @@
 #include <queue>
 #include "../matslise2d.h"
 #include "../util/quadrature.h"
-#include "../util/find_sector.h"
-#include "../util/scoped_timer.h"
-#include "../util/matching.h"
+#include <matslise/util/scoped_timer.h>
 
 using namespace Eigen;
 using namespace matslise;
@@ -31,7 +29,7 @@ Matslise2D<Scalar>::Matslise2D(const function<Scalar(Scalar, Scalar)> &potential
     sectors = std::move(sectorsBuild.sectors);
     matchIndex = sectorsBuild.matchIndex;
     Index sectorCount = sectors.size();
-    for (auto &sector : sectors)
+    for (auto &sector: sectors)
         sector->quadratures.reset();
 
     M.reserve(sectorCount - 1);

@@ -1,6 +1,6 @@
 #include "../matslise3d.h"
 #include "../util/quadrature.h"
-#include "../util/scoped_timer.h"
+#include <matslise/util/scoped_timer.h>
 #include <map>
 
 using namespace Eigen;

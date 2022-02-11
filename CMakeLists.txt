@@ -30,7 +30,7 @@ set(MATSLISE2D_TEST_SRC
         test/matslise2d/derivatives.cpp test/matslise2d/coulomb.cpp test/matslise2d/pentagon.cpp test/matslise2d/twoSextic.cpp
         test/matslise2d/quadrature.cpp
         test/matslise3d/coulomb.cpp test/matslise3d/harmonic_oscillator.cpp
-        test/util/quadrature.cpp test/util/calculateEta.cpp test/util/rectangle.cpp test/util/heap.cpp)
+        test/util/quadrature.cpp)
 
 add_library(matslise2d ${MATSLISE2D_SRC})
 

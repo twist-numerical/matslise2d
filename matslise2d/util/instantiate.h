@@ -2,41 +2,23 @@
 #define INSTANTIATE_MORE(Scalar)
 #endif
 
-#ifndef INSTANTIATE_MATSLISE
-#define INSTANTIATE_MATSLISE(Scalar)
+#ifndef INSTANTIATE_MATSLISE2D
+#define INSTANTIATE_MATSLISE2D(Scalar)
 #endif
-
-/*
-#ifndef INSTANTIATE_MATSLISE
-#define INSTANTIATE_MATSLISE(Scalar)\
-template class matslise::Matslise<Scalar>;\
-template class matslise::MatsliseHalf<Scalar>;\
-template class matslise::Matscs<Scalar>;\
-template class matslise::Matslise2DSector<Scalar>;\
-template class matslise::Matslise2D<Scalar>;\
-template class matslise::Matslise2DHalf<Scalar>;\
-template class matslise::Matslise3DSector<Scalar>;\
-template class matslise::Matslise3D<Scalar>;\
-template class matslise::MatsliseNDSector<Scalar>;\
-template class matslise::MatsliseND<Scalar, matslise::Matslise2DSector<Scalar>>;\
-template class matslise::MatsliseND<Scalar, matslise::Matslise3DSector<Scalar>>;\
-INSTANTIATE_MORE(Scalar)
-#endif
- */
 
 #define INSTANTIATE_ALL(Scalar) \
-INSTANTIATE_MATSLISE(Scalar) \
+INSTANTIATE_MATSLISE2D(Scalar) \
 INSTANTIATE_MORE(Scalar)
 
 INSTANTIATE_ALL(double)
 
-#ifdef MATSLISE_long_double
+#ifdef MATSLISE2D_long_double
 
 INSTANTIATE_ALL(long double)
 
 #endif
 
-#ifdef MATSLISE_float128
+#ifdef MATSLISE2D_float128
 
 #include <boost/multiprecision/float128.hpp>
 

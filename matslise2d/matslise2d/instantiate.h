@@ -1,4 +1,4 @@
-#define INSTANTIATE_MATSLISE(Scalar)\
+#define INSTANTIATE_MATSLISE2D(Scalar)\
 template class matslise::Matslise2DSector<Scalar>;\
 template class matslise::Matslise2D<Scalar>;\
 template class matslise::Matslise2DHalf<Scalar>;\
