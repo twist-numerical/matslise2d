@@ -121,4 +121,12 @@ Matslise2D<Scalar>::eigenfunction(const Y<Scalar, Dynamic> &left, const Scalar &
     return eigenfunctions;
 }
 
+#define INSTANTIATE_EIGENFUNCTION(Scalar, withDerivative) \
+template vector<Eigenfunction2D<Scalar, (withDerivative)>> \
+Matslise2D<Scalar>::eigenfunction<withDerivative>(const Y<Scalar, Dynamic> &left, const Scalar &E) const;
+
+#define INSTANTIATE_MORE(Scalar) \
+INSTANTIATE_EIGENFUNCTION(Scalar, true) \
+INSTANTIATE_EIGENFUNCTION(Scalar, false)
+
 #include "instantiate.h"

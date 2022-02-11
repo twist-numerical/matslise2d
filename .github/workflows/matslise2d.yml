@@ -54,7 +54,7 @@ jobs:
       - name: Run tests
         run: |
           ./matslise2d_test
-        working-directory: ./build/test
+        working-directory: ./build
 
   matslise2d_test_float128:
     name: Test matslise2d (float128)
@@ -93,7 +93,7 @@ jobs:
       - name: Run tests
         run: |
           ./matslise2d_test
-        working-directory: ./build/test
+        working-directory: ./build
 
 
   pyslise2d_test:
