@@ -107,20 +107,20 @@ void matslise::BasisQuadrature<Scalar, hmax, halfrange>::calculateQuadData(
                     return T(0, 1);
                 });
 
-        Array<Scalar, MATSLISE_INTEGRATE_eta_rows, Dynamic>
+        Array<Scalar, MATSLISE2D_INTEGRATE_eta_rows, Dynamic>
                 uu = etaProduct<Scalar>(u, u);
-        Array<Scalar, MATSLISE_INTEGRATE_eta_rows, Dynamic>
+        Array<Scalar, MATSLISE2D_INTEGRATE_eta_rows, Dynamic>
                 uv = etaProduct<Scalar>(u, v);
-        Array<Scalar, MATSLISE_INTEGRATE_eta_rows, Dynamic>
+        Array<Scalar, MATSLISE2D_INTEGRATE_eta_rows, Dynamic>
                 vv = etaProduct<Scalar>(v, v);
-        Array<Scalar, MATSLISE_INTEGRATE_eta_rows, Dynamic>
-                vu(MATSLISE_INTEGRATE_eta_rows, MATSLISE_INTEGRATE_delta);
+        Array<Scalar, MATSLISE2D_INTEGRATE_eta_rows, Dynamic>
+                vu(MATSLISE2D_INTEGRATE_eta_rows, MATSLISE2D_INTEGRATE_delta);
 
         for (Index i = 0; i < MATSLISE_ETA_delta; ++i)
             for (Index j = 0; j < MATSLISE_ETA_delta; ++j) {
                 Index ij = ETA_index(i, j);
                 Index ji = ETA_index(j, i);
-                if (ij >= MATSLISE_INTEGRATE_eta_rows || ji >= MATSLISE_INTEGRATE_eta_rows) break;
+                if (ij >= MATSLISE2D_INTEGRATE_eta_rows || ji >= MATSLISE2D_INTEGRATE_eta_rows) break;
                 vu.row(ji) = uv.row(ij);
             }
 
@@ -140,7 +140,7 @@ void matslise::BasisQuadrature<Scalar, hmax, halfrange>::calculateQuadData(
             for (int j = 0; j <= i; ++j) {
                 if (halfrange && (i % 2) != (j % 2))
                     continue;
-                Array<Scalar, MATSLISE_INTEGRATE_eta_rows, Dynamic>
+                Array<Scalar, MATSLISE2D_INTEGRATE_eta_rows, Dynamic>
                         eta = (i == j
                                ? eta_integrals<Scalar, true>(sector1d->h,
                                                              sector1d->vs[0] - sector2d.eigenvalues[i],
@@ -158,31 +158,31 @@ void matslise::BasisQuadrature<Scalar, hmax, halfrange>::calculateQuadData(
 
                     Eigen::Index last_eta = 3;
                     Eigen::Index last_eta_increment = 3;
-                    for (Index n = 0; n < MATSLISE_INTEGRATE_delta; ++n) {
-                        if (last_eta < MATSLISE_INTEGRATE_delta) {
+                    for (Index n = 0; n < MATSLISE2D_INTEGRATE_delta; ++n) {
+                        if (last_eta < MATSLISE2D_INTEGRATE_delta) {
                             if (n % 2 == 0 && n > 0) {
                                 last_eta += last_eta_increment;
                                 ++last_eta_increment;
                             }
 
-                            Matrix<Scalar, -1, 1, Eigen::ColMajor, MATSLISE_INTEGRATE_eta_rows, 1> coln
+                            Matrix<Scalar, -1, 1, Eigen::ColMajor, MATSLISE2D_INTEGRATE_eta_rows, 1> coln
                                     = (suu * uu + suv * uv + svu * vu + svv * vv).matrix().col(n).head(last_eta);
-                            for (Index m = 0; m < hmax && m + n < MATSLISE_INTEGRATE_delta; ++m) {
+                            for (Index m = 0; m < hmax && m + n < MATSLISE2D_INTEGRATE_delta; ++m) {
                                 quadratures(m) += coln.dot(eta.col(m + n).head(last_eta).matrix());
                             }
-                        } else if (n <= MATSLISE_INTEGRATE_delta - hmax) {
+                        } else if (n <= MATSLISE2D_INTEGRATE_delta - hmax) {
                             quadratures += (
                                     (suu * uu + suv * uv + svu * vu + svv * vv).matrix()
-                                            .template block<MATSLISE_INTEGRATE_eta_rows, 1>(0, n)
+                                            .template block<MATSLISE2D_INTEGRATE_eta_rows, 1>(0, n)
                                             .transpose()
-                                    * eta.matrix().template block<MATSLISE_INTEGRATE_eta_rows, hmax>(
+                                    * eta.matrix().template block<MATSLISE2D_INTEGRATE_eta_rows, hmax>(
                                             0, n)).array();
                         } else {
-                            Matrix<Scalar, MATSLISE_INTEGRATE_eta_rows, 1> coln
+                            Matrix<Scalar, MATSLISE2D_INTEGRATE_eta_rows, 1> coln
                                     = (suu * uu + suv * uv + svu * vu + svv * vv).matrix().col(n);
-                            for (Index m = 0; m < hmax && m + n < MATSLISE_INTEGRATE_delta; ++m) {
+                            for (Index m = 0; m < hmax && m + n < MATSLISE2D_INTEGRATE_delta; ++m) {
                                 quadratures(m) += coln.dot(
-                                        eta.template block<MATSLISE_INTEGRATE_eta_rows, 1>(0, m + n)
+                                        eta.template block<MATSLISE2D_INTEGRATE_eta_rows, 1>(0, m + n)
                                                 .matrix());
                             }
                         }

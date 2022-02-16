@@ -14,7 +14,7 @@ TEST_CASE("2D: coulomb", "[matslise2d][coulomb][slow]") {
     const double a = 0.05;
     const double b = 12.3;
     int steps = 16;
-#pragma omp parallel for
+
     for (int i = 0; i < steps; ++i) {
         const double z = -b + 2 * b * (i + .5) / steps;
         Matslise2D<double> matslise([a, z](double x, double y) -> double {

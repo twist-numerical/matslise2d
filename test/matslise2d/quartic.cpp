@@ -84,7 +84,7 @@ TEST_CASE("Eigenfunctions quartic: c=3", "[matslise2d][eigenvalues][quartic]") {
              187.54903714202645897, 216.15194758663360719});
 }
 
-#ifdef MATSLISE_float128
+#ifdef MATSLISE2D_QUADMATH
 
 #include <boost/multiprecision/float128.hpp>
 

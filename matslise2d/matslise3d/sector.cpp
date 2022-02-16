@@ -1,6 +1,6 @@
 #include "../matslise3d.h"
 #include <matslise/util/legendre.h>
-#include <matslise/util/quadrature.h>
+#include "../util/quadrature.h"
 
 using namespace Eigen;
 using namespace matslise;

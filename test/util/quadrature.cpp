@@ -1,8 +1,6 @@
 #include <cmath>
-#include <vector>
 #include <tuple>
 #include "../catch.hpp"
-#include <matslise/matslise.h>
 #include "../../matslise2d/util/quadrature.h"
 
 

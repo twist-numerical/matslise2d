@@ -16,6 +16,7 @@ else ()
 endif ()
 
 set(MATSLISE2D_SRC
+        matslise2d/util/quadrature.cpp
         matslise2d/matslise2d/halfrange.cpp matslise2d/matslise2d/eigenfunctions.cpp
         matslise2d/matslise2d/matslise2d.cpp matslise2d/matslise2d/sector.cpp matslise2d/matslise2d/basisQuadrature.cpp
         matslise2d/matsliseNd/sector.cpp
@@ -42,9 +43,9 @@ OPTION(MATSLISE2D_LONG_DOUBLE "Compile with support for long double" OFF)
 if (MATSLISE2D_LONG_DOUBLE)
     add_definitions(-DMATSLISE2D_LONG_DOUBLE)
     message("-- with support for long double")
-    set(LONG_DOUBLE ON)
+    set(MATSLISE2D_LONG_DOUBLE ON)
 else ()
-    set(LONG_DOUBLE OFF)
+    set(MATSLISE2D_LONG_DOUBLE OFF)
     message("-- without support for long double")
 endif ()
 
@@ -55,10 +56,10 @@ IF (MATSLISE2D_QUADMATH)
         add_definitions(-DBOOST)
         include_directories(${Boost_INCLUDE_DIRS})
 
-        find_package(Quadmath)
+        find_package(Quadmath REQUIRED)
         if (Quadmath_FOUND)
             add_definitions(-DMATSLISE2D_QUADMATH)
-            set(QUADMATH ON)
+            set(MATSLISE_QUADMATH ON)
             list(APPEND libraries Quadmath::quadmath)
         endif ()
     endif ()
