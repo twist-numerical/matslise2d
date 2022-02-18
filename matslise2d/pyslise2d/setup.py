@@ -31,7 +31,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="pyslise2d",
-    version="${PYSLISE2D_VERSION}",
+    version="${MATSLISE2D_VERSION}",
     author="Toon Baeyens",
     author_email="toon.baeyens@ugent.be",
     description="Python bindings for the C++ version of 2D Matslise",

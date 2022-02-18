@@ -105,7 +105,7 @@ if (MATSLISE2D_PYTHON)
         configure_file(matslise2d/pyslise2d/setup.py setup.py NEWLINE_STYLE LF)
         configure_file(matslise2d/pyslise2d/description.md description.md NEWLINE_STYLE LF)
         add_custom_target(build_wheel
-                COMMAND ${CMAKE_COMMAND} -E env PYSLISE_LIBRARY="$<TARGET_FILE:pyslise2d>"
+                COMMAND ${CMAKE_COMMAND} -E env PYSLISE2D_LIBRARY="$<TARGET_FILE:pyslise2d>"
                 ${PYTHON_EXECUTABLE} setup.py bdist_wheel
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
         add_dependencies(build_wheel pyslise2d)
