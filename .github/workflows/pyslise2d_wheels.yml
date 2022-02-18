@@ -3,7 +3,8 @@ name: Build pyslise.whl
 on:
   push:
     tags:
-      - v3.*
+      - v*
+  workflow_dispatch:
 
 jobs:
   build_wheel:
@@ -67,8 +68,8 @@ jobs:
         working-directory: ./build
       - uses: actions/upload-artifact@v2-preview
         with:
-          name: pyslise_${{ matrix.os }}_${{ matrix.python-version }}
-          path: ./build/matslise/dist/*.whl
+          name: pyslise2d_${{ matrix.os }}_${{ matrix.python-version }}
+          path: ./build/matslise2d/dist/*.whl
   test_wheel:
     if: always()
     runs-on: ${{ matrix.os }}
@@ -81,26 +82,26 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: pyslise_${{ matrix.os }}_${{ matrix.python-version }}
-          path: ../pyslise_wheel
+          name: pyslise2d_${{ matrix.os }}_${{ matrix.python-version }}
+          path: ../pyslise2d_wheel
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
           pip install wheel
-      - name: install pyslise
+      - name: install pyslise2d
         if: ${{startsWith(matrix.os, 'windows')}}
         run: |
-          pip install $(get-item ../pyslise_wheel/*.whl)
-      - name: install pyslise
+          pip install $(get-item ../pyslise2d_wheel/*.whl)
+      - name: install pyslise2d
         if: ${{!startsWith(matrix.os, 'windows')}}
         run: |
-          pip install ../pyslise_wheel/*.whl
+          pip install ../pyslise2d_wheel/*.whl
       - uses: actions/checkout@v2
-      - name: test pyslise
+      - name: test pyslise2d
         run: |
-          python test/pyslise/test_docs.py --verbose
+          python test/pyslise2d/test_docs.py --verbose
   build_wheel_manylinux:
     runs-on: ubuntu-18.04
     steps:
@@ -110,10 +111,10 @@ jobs:
       - run: mkdir build
       - name: run docker manylinux
         run: |
-          docker run -v $(pwd):/opt/matslise quay.io/pypa/manylinux2010_x86_64 /opt/matslise/docker_build.sh
+          docker run -v $(pwd):/opt/matslise2d quay.io/pypa/manylinux2010_x86_64 /opt/matslise2d/docker_build.sh
       - uses: actions/upload-artifact@v2-preview
         with:
-          name: pyslise_manylinux2010
+          name: pyslise2d_manylinux2010
           path: ./wheelhouse/*.whl
   test_wheel_manylinux:
     if: always()
@@ -126,21 +127,21 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: pyslise_manylinux2010
-          path: ../pyslise_wheel
+          name: pyslise2d_manylinux2010
+          path: ../pyslise2d_wheel
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
       - run: |
           pip install wheel
-      - name: install pyslise
+      - name: install pyslise2d
         run: |
-          pip install ../pyslise_wheel/pyslise-*-cp$(tr -d . <<< ${{ matrix.python-version }})-*manylinux2010_x86_64.whl
+          pip install ../pyslise2d_wheel/pyslise2d-*-cp$(tr -d . <<< ${{ matrix.python-version }})-*manylinux2010_x86_64.whl
       - uses: actions/checkout@v2
-      - name: test pyslise
+      - name: test pyslise2d
         run: |
-          python test/pyslise/test_docs.py --verbos
+          python test/pyslise2d/test_docs.py --verbos
   upload_wheels:
     if: always()
     runs-on: ubuntu-18.04

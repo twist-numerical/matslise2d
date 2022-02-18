@@ -152,7 +152,6 @@ INSTANTIATE_QUADRATURES(long double, MatrixXld)
 
 #include <boost/multiprecision/float128.hpp>
 
-
 typedef Eigen::Matrix<boost::multiprecision::float128, Dynamic, Dynamic> MatrixXq;
 
 INSTANTIATE_QUADRATURES(boost::multiprecision::float128, MatrixXq)

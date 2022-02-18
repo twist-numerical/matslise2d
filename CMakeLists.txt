@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(matslise2d LANGUAGES CXX)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib/matslise/cmake)
 cmake_policy(SET CMP0077 NEW)
 
 set(MATSLISE2D_VERSION "0.0.1")
@@ -14,6 +15,8 @@ if (MSVC)
 else ()
     add_compile_options(-Wall -Wextra -Wno-undefined-var-template)
 endif ()
+
+set(libraries matslise Eigen3::Eigen)
 
 set(MATSLISE2D_SRC
         matslise2d/util/quadrature.cpp
@@ -40,36 +43,37 @@ SET(MATSLISE_MATSCS ON)
 SET(MATSLISE_PYTHON OFF)
 
 OPTION(MATSLISE2D_LONG_DOUBLE "Compile with support for long double" OFF)
+set(MATSLISE2D_LONG_DOUBLE MATSLISE2D_LONG_DOUBLE)
 if (MATSLISE2D_LONG_DOUBLE)
-    add_definitions(-DMATSLISE2D_LONG_DOUBLE)
+    add_definitions(-DMATSLISE_LONG_DOUBLE -DMATSLISE2D_LONG_DOUBLE)
     message("-- with support for long double")
-    set(MATSLISE2D_LONG_DOUBLE ON)
 else ()
-    set(MATSLISE2D_LONG_DOUBLE OFF)
     message("-- without support for long double")
 endif ()
 
 OPTION(MATSLISE2D_QUADMATH "Option description" OFF)
-IF (MATSLISE2D_QUADMATH)
+set(MATSLISE_QUADMATH MATSLISE2D_QUADMATH)
+if (MATSLISE2D_QUADMATH)
     find_package(Boost REQUIRED)
     if (Boost_FOUND)
         add_definitions(-DBOOST)
         include_directories(${Boost_INCLUDE_DIRS})
 
         find_package(Quadmath REQUIRED)
-        if (Quadmath_FOUND)
-            add_definitions(-DMATSLISE2D_QUADMATH)
-            set(MATSLISE_QUADMATH ON)
-            list(APPEND libraries Quadmath::quadmath)
-        endif ()
+
+        add_definitions(-DMATSLISE_QUADMATH -DMATSLISE2D_QUADMATH)
+        list(APPEND libraries Quadmath::quadmath)
     endif ()
-ENDIF (MATSLISE2D_QUADMATH)
+    message("-- with support for float128")
+else ()
+    message("-- without support for float128")
+endif ()
 
 add_subdirectory(lib/matslise)
 include_directories(lib/matslise)
 set_property(TARGET matslise PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-set(libraries matslise)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
 target_link_libraries(matslise2d PUBLIC ${libraries})
 
