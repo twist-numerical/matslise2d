@@ -304,7 +304,7 @@ The next set of parameters are more advanced. Tweaking these can be useful when 
                 std::vector<double> r;
                 if (auto ms = std::dynamic_pointer_cast<Matslise<double>>(s.matslise)) {
                     for (auto &sector: ms->sectors)
-                        r.push_back(s.max);
+                        r.push_back(sector->max);
                     r.pop_back();
                 }
                 return r;
