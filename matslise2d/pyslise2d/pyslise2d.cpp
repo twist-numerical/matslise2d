@@ -61,7 +61,7 @@ Estimate an error of a given eigenvalue by using a lower order method.
             .def("eigenfunction",
                  [](const shared_ptr<Matslise2D<>> &se2d, double E) -> vector<Eigenfunction2DWrapper<double>> {
                      vector<Eigenfunction2DWrapper<double>> result;
-                     for (auto &f : se2d->eigenfunction(E))
+                     for (auto &f: se2d->eigenfunction(E))
                          result.emplace_back(se2d, f);
                      return result;
                  }, R""""(\
@@ -74,7 +74,7 @@ Returns a list if eigenfunctions corresponding to the eigenvalue E as python fun
             .def("eigenfunctionWithDerivatives",
                  [](const shared_ptr<Matslise2D<>> &se2d, double E) -> vector<Eigenfunction2DWrapper<double, true>> {
                      vector<Eigenfunction2DWrapper<double, true>> result;
-                     for (auto &f : se2d->eigenfunctionWithDerivatives(E))
+                     for (auto &f: se2d->eigenfunctionWithDerivatives(E))
                          result.emplace_back(se2d, f);
                      return result;
                  }, R""""(\
@@ -203,7 +203,7 @@ Just like Pyslise2D::matchingError(E) computes this function the discontinuity o
             })
             .def_property_readonly("__sectors", [](const Matslise2D<> &p) -> vector<Matslise2D<>::Sector *> {
                 vector<Matslise2D<>::Sector *> v;
-                for (auto &s : p.sectors)
+                for (auto &s: p.sectors)
                     v.emplace_back(s.get());
                 return v;
             });
@@ -300,10 +300,15 @@ The next set of parameters are more advanced. Tweaking these can be useful when 
                      return sector.propagateWithIndex(E, y0).second;
                  },
                  py::arg("E"), py::arg("y"), py::arg("dy"))
-            .def_property_readonly("matslise",
-                                   [](Matslise2D<>::Sector &s) -> AbstractMatslise<double> * {
-                                       return s.matslise.get();
-                                   }, py::return_value_policy::reference_internal)
+            .def_property_readonly("partition", [](Matslise2D<>::Sector &s) -> std::vector<double> {
+                std::vector<double> r;
+                if (auto ms = std::dynamic_pointer_cast<Matslise<double>>(s.matslise)) {
+                    for (auto &sector: ms->sectors)
+                        r.push_back(s.max);
+                    r.pop_back();
+                }
+                return r;
+            })
             .def_readonly("matscs", &Matslise2D<>::Sector::matscs, py::return_value_policy::reference)
             .def_readonly("min", &Matslise2D<>::Sector::min)
             .def_readonly("max", &Matslise2D<>::Sector::max);
