@@ -127,14 +127,18 @@ Returns a list if eigenfunctions corresponding to the eigenvalue E as python fun
                      config.stepsPerSector = stepsPerSector;
 
                      if (x_count != -1)
-                         config.xSectorBuilder = sector_builder::uniform<Matslise<>>(x_count);
+                         config.xSectorBuilder =
+                                 std::make_shared<sector_builder::UniformSectorBuilder<Matslise<>>>(x_count);
                      else
-                         config.xSectorBuilder = sector_builder::automatic<Matslise<>>(x_tol);
+                         config.xSectorBuilder =
+                                 std::make_shared<sector_builder::AutomaticSectorBuilder<Matslise<>>>(x_tol);
 
                      if (y_count != -1)
-                         config.ySectorBuilder = sector_builder::uniform<Matslise2D<>>(y_count);
+                         config.ySectorBuilder =
+                                 std::make_shared<sector_builder::UniformSectorBuilder<Matslise2D<>>>(y_count);
                      else
-                         config.ySectorBuilder = sector_builder::automatic<Matslise2D<>>(y_tol);
+                         config.ySectorBuilder =
+                                 std::make_shared<sector_builder::AutomaticSectorBuilder<Matslise2D<>>>(y_tol);
 
                      return make_unique<Matslise2D<>>([V](double x, double y) -> double {
                          py::gil_scoped_acquire acquire;
@@ -241,14 +245,18 @@ Just like Pyslise2D::matchingError(E) computes this function the discontinuity o
                      config.stepsPerSector = stepsPerSector;
 
                      if (x_count != -1)
-                         config.xSectorBuilder = sector_builder::uniform<Matslise<>>(x_count);
+                         config.xSectorBuilder =
+                                 std::make_shared<sector_builder::UniformSectorBuilder<Matslise<>>>(x_count);
                      else
-                         config.xSectorBuilder = sector_builder::automatic<Matslise<>>(x_tol);
+                         config.xSectorBuilder =
+                                 std::make_shared<sector_builder::AutomaticSectorBuilder<Matslise<>>>(x_tol);
 
                      if (y_count != -1)
-                         config.ySectorBuilder = sector_builder::uniform<Matslise2D<>>(y_count);
+                         config.ySectorBuilder =
+                                 std::make_shared<sector_builder::UniformSectorBuilder<Matslise2D<>>>(y_count);
                      else
-                         config.ySectorBuilder = sector_builder::automatic<Matslise2D<>>(y_tol);
+                         config.ySectorBuilder =
+                                 std::make_shared<sector_builder::AutomaticSectorBuilder<Matslise2D<>>>(y_tol);
 
                      return make_unique<Matslise2DHalf<>>([V](double x, double y) -> double {
                          py::gil_scoped_acquire acquire;
