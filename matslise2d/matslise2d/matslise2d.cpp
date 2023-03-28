@@ -60,7 +60,7 @@ Matslise2D<Scalar>::Matslise2D(const function<Scalar(Scalar, Scalar)> &potential
                         result(i) = nextBasis.row(i).matrix().transpose() * prevBasis.row(i).matrix();
                     }
                     return result;
-                }, domain.template min<0>(), domain.template max<0>(), 1e-8, [](const MatrixXs &v) {
+                }, domain.template min<0>(), domain.template max<0>(), config_.tolerance, [](const MatrixXs &v) {
                     return v.array().abs().maxCoeff();
                 })
         ));
