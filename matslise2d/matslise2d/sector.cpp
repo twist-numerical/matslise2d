@@ -20,13 +20,22 @@ vector<typename Matscs<Scalar>::Sector> initializeMatscs(const typename Matslise
         Scalar min = sector.min + i * h;
         Scalar max = sector.max - (steps - i - 1) * h;
         matscs.emplace_back(
-                legendre::getCoefficients<MATSCS_N, Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>, Scalar>(
+                legendre::getCoefficients<MATSCS_N, Scalar, Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>>(
                         [&](Scalar y) -> Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> {
                             return sector.quadratures->dV(sector, y);
                         }, min, max),
                 min, max, sector.direction);
     }
     return matscs;
+}
+
+template<typename Scalar>
+std::shared_ptr<sector_builder::SectorBuilder<Matslise<Scalar>>> getOrAutomatic(
+        std::shared_ptr<sector_builder::SectorBuilder<Matslise<Scalar>>> builder, Scalar tolerance
+) {
+    if (builder)
+        return builder;
+    return std::make_shared<sector_builder::AutomaticSectorBuilder<Matslise<Scalar>>>(tolerance);
 }
 
 template<typename Scalar>
@@ -41,15 +50,13 @@ Matslise2DSector<Scalar>::Matslise2DSector(const Matslise2D<Scalar> *se2d, const
     if (se2d->config.xSymmetric) {
         matslise = std::make_shared<MatsliseHalf<Scalar>>(
                 vbar_fun, se2d->domain.template max<0>(), se2d->config.tolerance,
-                sector_builder::getOrAutomatic<Matslise<Scalar>, false>(
-                        se2d->config.xSectorBuilder, se2d->config.tolerance));
+                *getOrAutomatic<Scalar>(se2d->config.xSectorBuilder, se2d->config.tolerance));
         quadratures = std::make_shared<BasisQuadrature<Scalar, MATSLISE2D_DELTA_V_DEGREE, true>>(
                 static_cast<const MatsliseHalf<Scalar> *>(matslise.get())->ms.get());
     } else {
         matslise = std::make_shared<Matslise<Scalar>>(
                 vbar_fun, se2d->domain.template min<0>(), se2d->domain.template max<0>(), se2d->config.tolerance,
-                sector_builder::getOrAutomatic<Matslise<Scalar>, false>(
-                        se2d->config.xSectorBuilder, se2d->config.tolerance));
+                *getOrAutomatic<Scalar>(se2d->config.xSectorBuilder, se2d->config.tolerance));
         quadratures = std::make_shared<BasisQuadrature<Scalar, MATSLISE2D_DELTA_V_DEGREE, false>>(
                 static_cast<const Matslise<Scalar> *>(matslise.get()));
     }
@@ -76,7 +83,7 @@ Matslise2DSector<Scalar>::Matslise2DSector(const Matslise2D<Scalar> *se2d, const
 template<typename Scalar>
 void Matslise2DSector<Scalar>::setDirection(Direction newDirection) {
     direction = newDirection;
-    for (auto &sector : matscs)
+    for (auto &sector: matscs)
         sector.setDirection(newDirection);
 }
 
@@ -113,15 +120,15 @@ Matslise2DSector<Scalar>::basis(const typename Matslise2DSector<Scalar>::ArrayXs
     const Index &N = se2d->config.basisSize;
     ArrayXXs b(size, N);
     ArrayXXs b_x;
-    if constexpr(withDerivatives)
+    if constexpr (withDerivatives)
         b_x.resize(size, N);
     for (int i = 0; i < N; ++i) {
         Array<Scalar, Dynamic, 2> ys = (*eigenfunctions[i])(x);
         b.col(i) = ys.col(0);
-        if constexpr(withDerivatives)
+        if constexpr (withDerivatives)
             b_x.col(i) = ys.col(1);
     }
-    if constexpr(withDerivatives)
+    if constexpr (withDerivatives)
         return {b, b_x};
     else
         return b;
@@ -135,7 +142,7 @@ typename std::conditional<withDerivatives,
 Matslise2DSector<Scalar>::basis(const Scalar &x) const {
     ArrayXs b(this->eigenfunctions.size());
     ArrayXs b_x;
-    if constexpr(withDerivatives)
+    if constexpr (withDerivatives)
         b_x.resize(this->eigenfunctions.size());
 
     const Index &N = se2d->config.basisSize;
@@ -165,5 +172,6 @@ Matslise2DSector<Scalar>::basis<r>(const Matslise2DSector<Scalar>::ArrayXs &) co
 #define INSTANTIATE_MORE(Scalar)\
 INSTANTIATE_BASIS(Scalar, false)\
 INSTANTIATE_BASIS(Scalar, true) \
+
 
 #include "instantiate.h"

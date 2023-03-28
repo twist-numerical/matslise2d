@@ -34,7 +34,7 @@ vector<typename Matscs<Scalar>::Sector> initializeMatscs(const typename Matslise
         Scalar max = sector.max - (steps - i - 1) * h;
         // cout << min << ", " << max << endl; To many calls
         matscs.emplace_back(
-                legendre::getCoefficients<MATSCS_N, Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>, Scalar>(
+                legendre::getCoefficients<MATSCS_N, Scalar, Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>>(
                         [&](Scalar z) -> Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> {
                             MatrixXs dV(N, N);
 
@@ -61,6 +61,15 @@ vector<typename Matscs<Scalar>::Sector> initializeMatscs(const typename Matslise
     return matscs;
 }
 
+template<typename Problem>
+std::shared_ptr<sector_builder::SectorBuilder<Problem>> getOrAutomatic(
+        std::shared_ptr<sector_builder::SectorBuilder<Problem>> builder, typename Problem::Scalar tolerance
+) {
+    if (builder)
+        return builder;
+    return std::make_shared<sector_builder::AutomaticSectorBuilder<Problem>>(tolerance);
+}
+
 template<typename Scalar>
 Matslise3DSector<Scalar>::Matslise3DSector(
         const Matslise3D<Scalar> *matslise3d, const Scalar &zmin, const Scalar &zmax, Direction direction)
@@ -79,10 +88,8 @@ Matslise3DSector<Scalar>::Matslise3DSector(
     config2d.xSymmetric = config3d.xSymmetric;
     config2d.basisSize = config3d.xBasisSize;
     config2d.stepsPerSector = config3d.yStepsPerSector;
-    config2d.xSectorBuilder = sector_builder::getOrAutomatic<Matslise<Scalar>, false>(
-            config3d.xSectorBuilder, config3d.tolerance);
-    config2d.ySectorBuilder = sector_builder::getOrAutomatic<Matslise2D<Scalar>, false>(
-            config3d.ySectorBuilder, config3d.tolerance);
+    config2d.xSectorBuilder = getOrAutomatic<Matslise<Scalar>>(config3d.xSectorBuilder, config3d.tolerance);
+    config2d.ySectorBuilder = getOrAutomatic<Matslise2D<Scalar>>(config3d.ySectorBuilder, config3d.tolerance);
     matslise2d = std::make_shared<Matslise2D<Scalar>>(
             vbar_fun, matslise3d->domain.template slice<0, 1>(), config2d);
 
@@ -91,7 +98,7 @@ Matslise3DSector<Scalar>::Matslise3DSector(
     vector<tuple<Index, Scalar, Index>> singleEigenvalues = matslise2d->eigenvaluesByIndex(0, N);
     cout << "found: " << zbar << endl;
     Index eigenvalueCount = 0;
-    for (auto &iEm : singleEigenvalues) {
+    for (auto &iEm: singleEigenvalues) {
         eigenvalueCount += get<2>(iEm);
         cout << " (" << get<0>(iEm) << ", " << get<1>(iEm) << ", " << get<2>(iEm) << ")";
     }
@@ -105,11 +112,11 @@ Matslise3DSector<Scalar>::Matslise3DSector(
     eigenfunctions_grid.reserve(N);
 
     Index i = 0;
-    for (auto &E : singleEigenvalues) {
-        for (auto &f :  matslise2d->eigenfunction(get<1>(E))) {
+    for (auto &E: singleEigenvalues) {
+        for (auto &f: matslise2d->eigenfunction(get<1>(E))) {
             eigenvalues.push_back(get<1>(E));
             eigenfunctions.push_back(f);
-            eigenfunctions_grid.push_back(move(f(matslise3d->grid_x, matslise3d->grid_y)));
+            eigenfunctions_grid.push_back(std::move(f(matslise3d->grid_x, matslise3d->grid_y)));
 
             if (++i == N)
                 break;
@@ -127,7 +134,7 @@ Matslise3DSector<Scalar>::Matslise3DSector(
 template<typename Scalar>
 void Matslise3DSector<Scalar>::setDirection(Direction newDirection) {
     direction = newDirection;
-    for (auto &sector : matscs)
+    for (auto &sector: matscs)
         sector.setDirection(newDirection);
 }
 

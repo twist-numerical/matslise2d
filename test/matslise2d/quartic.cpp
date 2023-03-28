@@ -17,7 +17,7 @@ void testQuartic(
     typename Matslise2D<Scalar>::Config config;
     config.tolerance = tolerance;
     config.xSymmetric = true;
-    config.ySectorBuilder = sector_builder::uniform<Matslise2D<Scalar>>(sectorCount);
+    config.ySectorBuilder = std::make_shared<sector_builder::UniformSectorBuilder<Matslise2D<Scalar>>>(sectorCount);
 
     Matslise2DHalf<Scalar> p(
             [a, c](const Scalar &x, const Scalar &y) -> Scalar {

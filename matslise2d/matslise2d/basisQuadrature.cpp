@@ -53,7 +53,7 @@ matslise::BasisQuadrature<Scalar, hmax, halfrange>::dV(
     Array<Scalar, hmax, 1> vDiff;
     auto quadIt = quadData.begin();
 
-    for (auto sector1d : matslise->sectors) {
+    for (const auto &sector1d : matslise->sectors) {
 
         if (sector1d->direction == forward) {
             vDiff = -Array<Scalar, hmax, 1>::Map(sector1d->vs.data());
@@ -97,7 +97,7 @@ void matslise::BasisQuadrature<Scalar, hmax, halfrange>::calculateQuadData(
     MATSLISE_SCOPED_TIMER("2D calculateQuadData");
 
     const Index &N = sector2d.se2d->config.basisSize;
-    for (auto sector1d : matslise->sectors) {
+    for (const auto &sector1d : matslise->sectors) {
         Array<Scalar, MATSLISE_ETA_delta, MATSLISE_HMAX_delta> u = sector1d->t_coeff.unaryExpr(
                 [](const Matrix<Scalar, 2, 2, DontAlign> &T) {
                     return T(0, 0);

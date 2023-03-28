@@ -18,8 +18,12 @@ Matslise3D<Scalar>::Matslise3D(
     grid_x = lobatto::grid<Scalar>(ArrayXs::LinSpaced(101, domain.template min<0>(), domain.template max<0>()));
     grid_y = lobatto::grid<Scalar>(ArrayXs::LinSpaced(101, domain.template min<1>(), domain.template max<1>()));
 
-    auto sectorsBuild = sector_builder::getOrAutomatic<Matslise3D<Scalar>, true>(
-            config.zSectorBuilder, config.tolerance)(this, domain.template min<2>(), domain.template max<2>());
+    std::shared_ptr<matslise::sector_builder::SectorBuilder<Matslise3D<Scalar>>> sector_builder
+            = config_.zSectorBuilder;
+    if (!sector_builder)
+        sector_builder = std::make_shared<matslise::sector_builder::AutomaticSectorBuilder<Matslise3D<Scalar>>>(
+                config_.tolerance);
+    auto sectorsBuild = (*sector_builder)(this, domain.template min<2>(), domain.template max<2>());
     sectors = std::move(sectorsBuild.sectors);
     matchIndex = sectorsBuild.matchIndex;
     Index sectorCount = sectors.size();
@@ -42,8 +46,9 @@ Matslise3D<Scalar>::Matslise3D(
 }
 
 
-#include <matslise/util/sectorbuilder.impl.h>
+#include <matslise/util/sectorbuilder.cpp>
 #include "../matsliseNd/matsliseNd.impl.h"
+
 
 #define INSTANTIATE_MORE(Scalar) \
 INSTANTIATE_SECTOR_BUILDER(Matslise3D<Scalar>) \

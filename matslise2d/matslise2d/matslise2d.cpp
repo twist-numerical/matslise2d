@@ -25,8 +25,11 @@ Matslise2D<Scalar>::Matslise2D(const function<Scalar(Scalar, Scalar)> &potential
         AbstractMatslise2D<Scalar>(potential, domain), MatsliseND<Scalar, Sector>(config_.basisSize, config_.tolerance),
         config(config_) {
     MATSLISE_SCOPED_TIMER("2D constructor");
-    auto sectorsBuild = sector_builder::getOrAutomatic<Matslise2D<Scalar>, false>(
-            config_.ySectorBuilder, config_.tolerance)(this, domain.template min<1>(), domain.template max<1>());
+    std::shared_ptr<matslise::sector_builder::SectorBuilder<Matslise2D<Scalar>>> sector_builder = config_.ySectorBuilder;
+    if (!sector_builder)
+        sector_builder = std::make_shared<matslise::sector_builder::AutomaticSectorBuilder<Matslise2D<Scalar>>>(
+                config_.tolerance);
+    auto sectorsBuild = (*sector_builder)(this, domain.template min<1>(), domain.template max<1>());
     sectors = std::move(sectorsBuild.sectors);
     matchIndex = sectorsBuild.matchIndex;
     Index sectorCount = sectors.size();
@@ -77,7 +80,7 @@ Scalar Matslise2D<Scalar>::estimatePotentialMinimum() const {
 }
 
 
-#include <matslise/util/sectorbuilder.impl.h>
+#include <matslise/util/sectorbuilder.cpp>
 #include "../matsliseNd/matsliseNd.impl.h"
 
 #define INSTANTIATE_MORE(Scalar) \

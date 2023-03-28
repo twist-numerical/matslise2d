@@ -40,7 +40,7 @@ Matslise2D<Scalar>::eigenfunction(const Y<Scalar, Dynamic> &left, const Scalar &
                                     -> typename Eigenfunction2D<Scalar, withDerivative>::ScalarReturn {
                                 MATSLISE_SCOPED_TIMER("2D eigenfunction scalar");
                                 Index sectorIndex = findSectorIndex(this, y);
-                                const value_ptr<Sector> &sector = sectors[sectorIndex];
+                                const unique_ptr<Sector> &sector = sectors[sectorIndex];
 
                                 Y<Scalar, Dynamic, 1> c =
                                         sector->direction == forward

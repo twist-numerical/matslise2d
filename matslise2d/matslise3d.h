@@ -61,7 +61,7 @@ namespace matslise {
         ArrayXXs vbar;
 
         std::vector<Scalar> eigenvalues;
-        std::vector<Eigenfunction2D < Scalar>> eigenfunctions;
+        std::vector<Eigenfunction2D<Scalar>> eigenfunctions;
         std::vector<ArrayXXs> eigenfunctions_grid;
         Direction direction = none;
 
@@ -100,9 +100,9 @@ namespace matslise {
             Scalar tolerance = 1e-6;
             bool xSymmetric = false;
             bool ySymmetric = false;
-            std::optional<SectorBuilder < Matslise < Scalar>, Scalar>> xSectorBuilder;
-            std::optional<SectorBuilder < Matslise2D < Scalar>, Scalar>> ySectorBuilder;
-            std::optional<SectorBuilder < Matslise3D<Scalar>, Scalar>> zSectorBuilder;
+            std::shared_ptr<matslise::sector_builder::SectorBuilder<Matslise<Scalar>, Scalar>> xSectorBuilder;
+            std::shared_ptr<matslise::sector_builder::SectorBuilder<Matslise2D<Scalar>, Scalar>> ySectorBuilder;
+            std::shared_ptr<matslise::sector_builder::SectorBuilder<Matslise3D<Scalar>, Scalar>> zSectorBuilder;
             Eigen::Index zStepsPerSector = 5;
             Eigen::Index yStepsPerSector = 3;
             Eigen::Index xyBasisSize = 12;

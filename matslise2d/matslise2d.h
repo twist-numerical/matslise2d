@@ -123,8 +123,8 @@ namespace matslise {
             bool xSymmetric = false;
             Eigen::Index basisSize = 12;
             Eigen::Index stepsPerSector = 2;
-            std::optional<SectorBuilder<Matslise<Scalar>, Scalar>> xSectorBuilder;
-            std::optional<SectorBuilder<Matslise2D<Scalar>, Scalar>> ySectorBuilder;
+            std::shared_ptr<matslise::sector_builder::SectorBuilder<Matslise<Scalar>, Scalar>> xSectorBuilder;
+            std::shared_ptr<matslise::sector_builder::SectorBuilder<Matslise2D<Scalar>, Scalar>> ySectorBuilder;
         };
 
         using Sector = Matslise2DSector<Scalar>;
@@ -208,7 +208,7 @@ namespace matslise {
         Y<Scalar, Eigen::Dynamic, Eigen::Dynamic> neumannBoundary;
         Y<Scalar, Eigen::Dynamic, Eigen::Dynamic> dirichletBoundary;
 
-        value_ptr<Matslise2D<Scalar>> se2d;
+        std::unique_ptr<Matslise2D<Scalar>> se2d;
 
         using AbstractMatslise2D<Scalar>::domain;
         using AbstractMatslise2D<Scalar>::potential;

@@ -29,7 +29,7 @@ Y<Scalar, Dynamic> MatsliseND<Scalar, Sector>::propagate(
     int direction = a < b ? 1 : -1;
     Index sectorCount = sectors.size();
     while (true) {
-        const value_ptr<Sector> &sector = sectors[sectorIndex];
+        const unique_ptr<Sector> &sector = sectors[sectorIndex];
         if (direction == -1 && sectorIndex < sectorCount - 1)
             y = (MatrixXs)(M[sectorIndex].transpose()) * y;
         y = sector->propagate(E, y, a, b, use_h);
@@ -199,7 +199,7 @@ Index MatsliseND<Scalar, Sector>::estimateIndex(Y<Scalar, Eigen::Dynamic> y, con
     Index tmpIndex;
     Index sectorCount = sectors.size();
     for (; sectorIndex < sectorCount - 1; ++sectorIndex) {
-        const value_ptr<Sector> &sector = sectors[sectorIndex];
+        const unique_ptr<Sector> &sector = sectors[sectorIndex];
         tie(y, tmpIndex) = sector->propagateWithIndex(E, y);
         index += tmpIndex;
         conditionY(y);
