@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019, ubuntu-18.04, macos-10.15 ]
+        os: [ windows-2019, ubuntu-latest, macos-10.15 ]
     steps:
       - name: Cache Eigen3
         id: cache-eigen3_3
@@ -58,7 +58,7 @@ jobs:
 
   matslise2d_test_float128:
     name: Test matslise2d (float128)
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
       - name: Cache Eigen3
         id: cache-eigen3_3
@@ -102,7 +102,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ windows-2019, ubuntu-18.04, macos-10.15 ]
+        os: [ windows-2019, ubuntu-latest, macos-10.15 ]
         python-version: [ 3.7 ]
     steps:
       - name: Cache Eigen3
