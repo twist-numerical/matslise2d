@@ -137,7 +137,7 @@ namespace matslise {
         Config config;
     public:
         Matslise2D(const std::function<Scalar(Scalar, Scalar)> &potential,
-                   const matslise::Rectangle<Scalar, 2> &domain, const Config &config = Config());
+                   const matslise::Rectangle<Scalar, 2> &domain, const Config &config_ = Config());
 
         virtual ~Matslise2D() = default;
 

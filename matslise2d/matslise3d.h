@@ -123,7 +123,7 @@ namespace matslise {
         using AbstractMatslise3D<Scalar>::potential;
     public:
         Matslise3D(const std::function<Scalar(Scalar, Scalar, Scalar)> &potential,
-                   const matslise::Rectangle<Scalar, 3> &domain, const Config &config = Config());
+                   const matslise::Rectangle<Scalar, 3> &domain, const Config &config_ = Config());
 
         virtual ~Matslise3D() = default;
 

@@ -21,11 +21,12 @@ Array<Scalar, Dynamic, 1> getGrid(const Scalar &min, const Scalar &max, int coun
 
 template<typename Scalar>
 Matslise2D<Scalar>::Matslise2D(const function<Scalar(Scalar, Scalar)> &potential,
-                               const matslise::Rectangle<Scalar, 2> &domain, const Config &_config):
-        AbstractMatslise2D<Scalar>(potential, domain), MatsliseND<Scalar, Sector>(_config.basisSize), config(_config) {
+                               const matslise::Rectangle<Scalar, 2> &domain, const Config &config_):
+        AbstractMatslise2D<Scalar>(potential, domain), MatsliseND<Scalar, Sector>(config_.basisSize, config_.tolerance),
+        config(config_) {
     MATSLISE_SCOPED_TIMER("2D constructor");
     auto sectorsBuild = sector_builder::getOrAutomatic<Matslise2D<Scalar>, false>(
-            _config.ySectorBuilder, _config.tolerance)(this, domain.template min<1>(), domain.template max<1>());
+            config_.ySectorBuilder, config_.tolerance)(this, domain.template min<1>(), domain.template max<1>());
     sectors = std::move(sectorsBuild.sectors);
     matchIndex = sectorsBuild.matchIndex;
     Index sectorCount = sectors.size();

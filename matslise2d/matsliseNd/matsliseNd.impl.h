@@ -87,20 +87,19 @@ MatsliseND<Scalar, Sector>::matchingError(const Y<Scalar, Eigen::Dynamic> &yLeft
 
 template<typename Scalar, typename Sector>
 pair<Scalar, Index> MatsliseND<Scalar, Sector>::eigenvalue(
-        const Y<Scalar, Dynamic> &left, const Scalar &_E, bool use_h) const {
+        const Y<Scalar, Dynamic> &left, Scalar E, bool use_h) const {
     MATSLISE_SCOPED_TIMER("ND eigenvalue");
-    const Scalar tolerance = 1e-9;
-    const Scalar minTolerance = 1e-5;
+    const Scalar minTolerance = sqrt(tolerance);
     const int maxIterations = 30;
 
-    Scalar E = _E;
     Scalar error, derror;
     int i = 0;
     do {
         tie(error, derror) = matchingError(left, E, use_h);
         E -= error / derror;
         ++i;
-    } while (i < maxIterations && abs(error) > tolerance);
+    } while (i < maxIterations && abs(error/derror) > tolerance);
+    // std::cout << i << ", " << E << ", " << abs(error/derror) << ", " << error << std::endl;
 
     if (abs(error) > minTolerance)
         return {NAN, 0};

@@ -11,9 +11,9 @@ using namespace quadrature;
 template<typename Scalar>
 Matslise3D<Scalar>::Matslise3D(
         const std::function<Scalar(Scalar, Scalar, Scalar)> &potential,
-        const matslise::Rectangle<Scalar, 3> &domain, const Config &_config)
+        const matslise::Rectangle<Scalar, 3> &domain, const Config &config_)
         : AbstractMatslise3D<Scalar>(potential, domain),
-          MatsliseND<Scalar, Matslise3DSector<Scalar>>(_config.xyBasisSize), config(_config) {
+          MatsliseND<Scalar, Matslise3DSector<Scalar>>(config_.xyBasisSize, config_.tolerance), config(config_) {
     MATSLISE_SCOPED_TIMER("3D constructor");
     grid_x = lobatto::grid<Scalar>(ArrayXs::LinSpaced(101, domain.template min<0>(), domain.template max<0>()));
     grid_y = lobatto::grid<Scalar>(ArrayXs::LinSpaced(101, domain.template min<1>(), domain.template max<1>()));
