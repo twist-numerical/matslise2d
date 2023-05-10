@@ -21,7 +21,8 @@ set(libraries matslise Eigen3::Eigen)
 set(MATSLISE2D_SRC
         matslise2d/util/quadrature.cpp
         matslise2d/matslise2d/halfrange.cpp matslise2d/matslise2d/eigenfunctions.cpp
-        matslise2d/matslise2d/matslise2d.cpp matslise2d/matslise2d/sector.cpp matslise2d/matslise2d/basisQuadrature.cpp
+        matslise2d/matslise2d/matslise2d.cpp matslise2d/matslise2d/sector.cpp # matslise2d/matslise2d/basisQuadrature.cpp
+        matslise2d/matslise2d/basisQuadrature_lobatto.cpp
         matslise2d/matsliseNd/sector.cpp
         matslise2d/matslise3d/matslise3d.cpp matslise2d/matslise3d/sector.cpp)
 

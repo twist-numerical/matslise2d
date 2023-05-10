@@ -3,7 +3,7 @@
 
 #include <matslise/matslise.h>
 #include <matslise/matscs.h>
-#include <matslise/util/rectangle.h>
+#include "./util/rectangle.h"
 #include "matslise2d/basisQuadrature.h"
 #include "matsliseNd.h"
 

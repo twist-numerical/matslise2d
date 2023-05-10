@@ -83,6 +83,7 @@ Scalar Matslise2D<Scalar>::estimatePotentialMinimum() const {
 #include <matslise/util/sectorbuilder.cpp>
 #include "../matsliseNd/matsliseNd.impl.h"
 
+#undef INSTANTIATE_MORE
 #define INSTANTIATE_MORE(Scalar) \
 INSTANTIATE_SECTOR_BUILDER(Matslise2D<Scalar>);
 

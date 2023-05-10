@@ -4,8 +4,6 @@
 #include "../catch.hpp"
 #include <matslise/util/legendre.h>
 #include "../../matslise2d/matslise2d.h"
-#include "../../matslise2d/matslise2d/etaIntegrals.h"
-#include "../../matslise2d/matslise2d/basisQuadrature.h"
 #include "checkOrthonormality.h"
 
 
